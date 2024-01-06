@@ -3,8 +3,6 @@ name: Initialize Project
 on:
   workflow_dispatch:
 
-env:
-  TOKEN: ${{ secrets.GH_TOKEN }}
 
 permissions: write-all
 
@@ -21,5 +19,5 @@ jobs:
           terraform init
       - name: terraform plan
         run: | 
-          terraform plan -var="gh_token=${{ secrets.GH_TOKEN }}"-no-color 
+          terraform plan -var="gh_token=${{ secrets.GH_PAT_TOKEN }}"-no-color 
           
