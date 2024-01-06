@@ -36,7 +36,7 @@ provider "github" {
 # Terraform Infra Template Repo
 #----------------------------------------------------------
 
-resource "github_repository" "infra_templaate" {
+resource "github_repository" "infra_template" {
   name = "aws-infra-template-tf"
   description = "Template Repo for all Terraform Infrastructure Repositories"
   is_template = true
@@ -45,7 +45,7 @@ resource "github_repository" "infra_templaate" {
 }
 
 resource "github_branch_protection" "infra_template_barnch_protection" {
-  repository_id = github_repository.infra_templaate
+  repository_id = github_repository.infra_template.name
   pattern = "main"
 
   required_pull_request_reviews {
