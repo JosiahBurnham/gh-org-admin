@@ -28,6 +28,12 @@ variable "gh_token" {
   description = "GitHub Access Token"
 }
 
+variable "aws_role" {
+  type = string
+  sensitive = true
+  description = "AWS Role to Assume"
+}
+
 provider "github" {
   token = var.gh_token
 }
@@ -55,4 +61,22 @@ resource "github_branch_protection" "infra_template_barnch_protection" {
     require_last_push_approval = true
   }
 
+}
+
+resource "github_actions_secret" "dev_assume_role" {
+  repository = github_repository.infra_template.name
+  secret_name = "DEV_ASSUME_ROLE"
+  plaintext_value = var.aws_role
+}
+
+resource "github_actions_secret" "stage_assume_role" {
+  repository = github_repository.infra_template.name
+  secret_name = "STAGE_ASSUME_ROLE"
+  plaintext_value = var.aws_role
+}
+
+resource "github_actions_secret" "prod_assume_role" {
+  repository = github_repository.infra_template.name
+  secret_name = "PROD_ASSUME_ROLE"
+  plaintext_value = var.aws_role
 }
