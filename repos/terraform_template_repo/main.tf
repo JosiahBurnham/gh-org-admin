@@ -1,4 +1,7 @@
-# Terraform Infra Template Repo
+#----------------------------------------------------------
+# File    : main.tf
+# Author  : J.Burnham
+# Purpose : Create terraform infra template repo
 #----------------------------------------------------------
 
 terraform {
@@ -28,6 +31,10 @@ variable "gh_token" {
 provider "github" {
   token = var.gh_token
 }
+
+
+# Terraform Infra Template Repo
+#----------------------------------------------------------
 
 resource "github_repository" "infra_templaate" {
   name = "aws-infra-template-tf"
