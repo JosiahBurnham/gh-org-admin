@@ -5,10 +5,20 @@ terraform {
         version = "~> 5.0"
       }
     }
+
+    required_version = ">=0.14.9"
+
+    backend "s3" {
+      bucket = "jb-tf-statefile-backend"
+      key = "gh-org-admin"
+      region = "us-east-1"
+    }
+
 }
 
 variable "gh_token" {
   type = string
+  sensitive = true
   description = "GitHub Access Token"
 }
 

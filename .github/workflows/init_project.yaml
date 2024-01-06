@@ -3,6 +3,8 @@ name: Initialize Project
 on:
   workflow_dispatch:
 
+env:
+  TF_VAR_gh_token: ${{ secrets.GH_PAT_TOKEN }}
 
 permissions: write-all
 
@@ -12,6 +14,12 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume: ${{ secrets.AWS_ASSUME_ROLE }}
+          role-session-name: gh-actions-exe-role
+          aws-region: us-east-1
       - name: terraform setup
         uses: hashicorp/setup-terraform@v3
       - name: init terraform
@@ -19,5 +27,5 @@ jobs:
           terraform init
       - name: terraform plan
         run: | 
-          terraform plan -var="gh_token=${{ secrets.GH_PAT_TOKEN }}"-no-color 
+          terraform plan -no-color 
           
