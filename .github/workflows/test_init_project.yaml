@@ -68,8 +68,8 @@ jobs:
               DIR="$(dirname "${file}")"
               PLANFILENAME=`echo $DIR | tr / _`
               terraform -chdir=$DIR init
-              terraform -chdir=$DIR plan -no-color
-              terraform -chdir=$DIR apply -no-color
+              terraform -chdir=$DIR plan -out=/tmp/tfplan/$PLANFILENAME.tfplan -no-color
+              terraform -chdir=$DIR apply -auto-approve /tmp/tfplan/$PLANFILENAME.tfplan
             fi
           done
           
