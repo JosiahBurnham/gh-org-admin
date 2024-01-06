@@ -33,7 +33,7 @@ provider "github" {
 }
 
 
-# Terraform Infra Template Repo
+# Terraform Infra Template Repo test
 #----------------------------------------------------------
 
 resource "github_repository" "infra_template" {
