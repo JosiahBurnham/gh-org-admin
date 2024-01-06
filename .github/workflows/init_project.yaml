@@ -1,8 +1,7 @@
-name: Test Initialize Repo
+name: Initialize Repo
 
 on:
-  pull_request:
-    types: [opened, reopened, synchronize]
+  push:
     branches:
       - "master"
       - "main"
@@ -59,8 +58,7 @@ jobs:
       - name: terraform setup
         uses: hashicorp/setup-terraform@v3
 
-      - name: test create repo
-        id: plan
+      - name: create repo
         run: |   
           mkdir -p /tmp/tfplan       
           for file in ${{ matrix.FUNCTIONS }}; do
@@ -70,31 +68,8 @@ jobs:
               DIR="$(dirname "${file}")"
               PLANFILENAME=`echo $DIR | tr / _`
               terraform -chdir=$DIR init
-              echo 'plan<<EOF' >> $GITHUB_OUTPUT
-              terraform -chdir=$DIR plan -out=/tmp/tfplan/$PLANFILENAME.tfplan -no-color >> $GITHUB_OUTPUT
-              echo 'EOF' >> $GITHUB_OUTPUT
+              terraform -chdir=$DIR plan -out=/tmp/tfplan/$PLANFILENAME.tfplan -no-color
+              terraform -chdir=$DIR apply -auto-approve /tmp/tfplan/$PLANFILENAME.tfplan
             fi
           done
-
-      - name: Get PR ID
-        id: pr-id
-        shell: bash
-        env:
-          GITHUB_REF: ${{ inputs.github_ref }}
-        run: |
-          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
-
-      - name: Comment Plan
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          token: ${{ secrets.GH_PAT_TOKEN }}
-          issue-number: ${{ steps.pr-id.outputs.PR_NUMBER }}
-          body: |
-            Terraform Plan:
-
-            ```
-            ${{ steps.plan.outputs.plan }}
-            ```
-        
           
