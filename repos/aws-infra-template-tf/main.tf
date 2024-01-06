@@ -57,7 +57,6 @@ resource "github_branch_protection" "infra_template_barnch_protection" {
   required_pull_request_reviews {
     require_code_owner_reviews = true
     required_approving_review_count = 1
-    pull_request_bypassers = ["/JosiahBurnham"]
     require_last_push_approval = true
   }
 
