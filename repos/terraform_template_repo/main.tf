@@ -34,7 +34,7 @@ provider "github" {
 
 
 # Terraform Infra Template Repo
-#----------------------------------------------------------
+#------------------------------
 
 resource "github_repository" "infra_template" {
   name = "aws-infra-template-tf"
