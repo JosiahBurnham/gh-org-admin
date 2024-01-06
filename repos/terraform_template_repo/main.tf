@@ -80,3 +80,9 @@ resource "github_actions_secret" "prod_assume_role" {
   secret_name = "PROD_ASSUME_ROLE"
   plaintext_value = var.aws_role
 }
+
+resource "github_actions_secret" "gh_token_secret" {
+  repository = github_repository.infra_template.name
+  secret_name = "GH_PAT_TOKEN"
+  plaintext_value = var.gh_token
+}
