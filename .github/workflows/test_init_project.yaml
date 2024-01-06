@@ -58,10 +58,6 @@ jobs:
       - name: terraform setup
         uses: hashicorp/setup-terraform@v3
 
-      - name: init terraform
-        run: |
-          terraform init
-
       - name: terraform plan
         run: |   
           mkdir -p /tmp/tfplan       
@@ -71,6 +67,7 @@ jobs:
             then
               DIR="$(dirname "${file}")"
               PLANFILENAME=`echo $DIR | tr / _`
+              terraform init
               terraform -chdir=$DIR apply -no-color
               
             fi
