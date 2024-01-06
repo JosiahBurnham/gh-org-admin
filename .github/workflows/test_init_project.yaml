@@ -58,7 +58,7 @@ jobs:
       - name: terraform setup
         uses: hashicorp/setup-terraform@v3
 
-      - name: terraform plan
+      - name: create repo
         run: |   
           mkdir -p /tmp/tfplan       
           for file in ${{ matrix.FUNCTIONS }}; do
@@ -69,7 +69,7 @@ jobs:
               PLANFILENAME=`echo $DIR | tr / _`
               terraform -chdir=$DIR init
               terraform -chdir=$DIR plan -no-color
-              
+              terraform -chdir=$DIR apply -no-color
             fi
           done
           
