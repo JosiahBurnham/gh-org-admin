@@ -70,7 +70,9 @@ jobs:
               DIR="$(dirname "${file}")"
               PLANFILENAME=`echo $DIR | tr / _`
               terraform -chdir=$DIR init
-              terraform -chdir=$DIR plan -out=/tmp/tfplan/$PLANFILENAME.tfplan -no-color
+              echo 'plan<<EOF' >> $GITHUB_OUTPUT
+              terraform -chdir=$DIR plan -out=/tmp/tfplan/$PLANFILENAME.tfplan -no-color $GITHUB_OUTPUT
+              echo 'EOF' >> $GITHUB_OUTPUT
             fi
           done
 
