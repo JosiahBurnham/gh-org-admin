@@ -1,3 +1,6 @@
+# Terraform Infra Template Repo
+#----------------------------------------------------------
+
 terraform {
     required_providers {
       github = {

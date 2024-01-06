@@ -1,7 +1,12 @@
 name: Test Initialize Repo
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - "master"
+      - "main"
+    paths:
+      - repos/**
 
 env:
   TF_VAR_gh_token: ${{ secrets.GH_PAT_TOKEN }}
