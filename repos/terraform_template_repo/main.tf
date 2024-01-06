@@ -46,7 +46,7 @@ resource "github_repository" "infra_template" {
 
 resource "github_branch_protection" "infra_template_barnch_protection" {
   repository_id = github_repository.infra_template.name
-  pattern = "main"
+  pattern = "master"
 
   required_pull_request_reviews {
     require_code_owner_reviews = true
