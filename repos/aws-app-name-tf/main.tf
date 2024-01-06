@@ -49,7 +49,7 @@ resource "github_repository" "infra_template" {
   delete_branch_on_merge = true
   
   template {
-    owner = "github"
+    owner = "JosiahBurnham"
     repository = "aws-infra-template-tf"
     include_all_branches = false
   }
