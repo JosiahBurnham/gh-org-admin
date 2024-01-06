@@ -66,7 +66,7 @@ jobs:
             then
               DIR="$(dirname "${file}")"
               PLANFILENAME=`echo $DIR | tr / _`
-              terraform -chdir=$DIR plan -no-color -out=/tmp/tfplan/$PLANFILENAME.tfplan 
+              terraform -chdir=$DIR plan -no-color 
               
             fi
           done
