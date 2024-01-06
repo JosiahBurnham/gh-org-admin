@@ -1,0 +1,73 @@
+name: Test Initialize Repo
+
+on:
+  workflow_dispatch:
+
+env:
+  TF_VAR_gh_token: ${{ secrets.GH_PAT_TOKEN }}
+  TF_VAR_aws_role: ${{ secrets.AWS_ASSUME_ROLE }}
+
+permissions: write-all
+
+jobs:
+  GetModifiedFiles:
+    name: Get Modified Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@4
+
+      - name: Get Modified Files
+        id: modified-files
+        uses: tj-actions/changed-files@v41
+        with:
+          files_separator: ","
+          files: |
+            repos/**
+
+    outputs:
+      matrix: ${{ steps.modified-files.outputs.all_changed_files }}
+
+  InitProject:
+    name: Test Initialize Repo
+    runs-on: ubuntu-latest
+    needs: GetModifiedFiles
+    strategy:
+      matrix:
+        FUNCTIONS: ["${{needs.GetModifiedFiles.outputs.matrix}}", none]
+        exclude:
+          - FUNCTIONS: none
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1.7.0
+        with:
+          role-to-assume: ${{ secrets.AWS_ASSUME_ROLE }}
+          role-session-name: gh-actions-exe-role
+          aws-region: us-east-1
+
+      - name: terraform setup
+        uses: hashicorp/setup-terraform@v3
+
+      - name: init terraform
+        run: |
+          terraform init
+
+      - name: terraform plan
+        run: |   
+          mkdir -p /tmp/tfplan       
+          for file in ${{ matrix.FUNCTIONS }}; do
+            filename=`basename $file`
+            if [[ "$file" != 'none' && "$filename" == 'terragrunt.hcl' ]]
+            then
+              DIR="$(dirname "${file}")"
+              PLANFILENAME=`echo $DIR | tr / _`
+              terraform -chdir=$DIR plan -no-color -out=/tmp/tfplan/$PLANFILENAME.tfplan 
+              
+            fi
+          done
+          
